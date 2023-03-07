@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">OwnApplication</string>
+    <string name="menu_title">Menu</string>
+    <string name="version">Version 1.0</string>
+    <string name="play_button">Play</string>
+    <string name="stats_button">Stats</string>
+    <string name="settings_button">Settings</string>
+</resources>
