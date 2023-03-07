@@ -19,6 +19,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val score = intent.getIntExtra("score", 0)
+        binding.menuTitle.text = "Score: " + score
+
         play()
 
         stats()
