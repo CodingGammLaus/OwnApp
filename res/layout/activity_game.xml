@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:text="@string/menu_title"
         android:textSize="35sp"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
