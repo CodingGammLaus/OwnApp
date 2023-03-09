@@ -10,6 +10,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private var health = 100
+    private var points = 1
+    private var speed = 2
+
     /**
      *
      */
@@ -20,13 +24,28 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val score = intent.getIntExtra("score", 0)
-        binding.menuTitle.text = "Score: " + score
+
+        getSettingsValues()
 
         play()
 
         stats()
 
         settings()
+    }
+
+    /**
+     *
+     */
+    private fun getSettingsValues() {
+
+        health = intent.getIntExtra("health", 100)
+        points = intent.getIntExtra("points", 1)
+        speed = intent.getIntExtra("speed", 2)
+
+        binding.menuTitle.text = "Healt: " + health +
+                "\nPoints: " + points +
+                "\nSpeed: " + speed
     }
 
     /**
@@ -37,6 +56,9 @@ class MainActivity : AppCompatActivity() {
         binding.playButton.setOnClickListener() {
 
             val intent = Intent(this, GameActivity::class.java)
+            intent.putExtra("health", health)
+            intent.putExtra("points", points)
+            intent.putExtra("speed", speed)
             startActivity(intent)
             finish()
         }
@@ -49,7 +71,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.statsButton.setOnClickListener() {
 
-            binding.menuTitle.text = "Stats"
+            val intent = Intent(this, StatsActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
@@ -60,7 +84,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.settingsButton.setOnClickListener() {
 
-            binding.menuTitle.text = "Settings"
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }

@@ -25,6 +25,9 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
     private val randMeteor = Random()
 
+    private var meteorTimer = Timer()
+    private var gameTimer = Timer()
+
     //private val game = Game(this)
 
     private var missile = Rect()
@@ -35,7 +38,8 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     private var score = 0
     private var points = 10
     private var health = 100
-    private var damage = 20
+    private var damage = 10
+    private var shipSpeed = 4
 
     private var paused = false
 
@@ -50,19 +54,27 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         setContentView(binding.root)
 
         setDisplaySizeToGame()
+        getStartValues()
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         gyroSensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
-        binding.menuTitle.text = "Game!"
+        binding.menuTitle.textSize = 25f
+        binding.menuTitle.text = "Press anywhere to start!\nTap to shoot and tilt to move"
 
-        shoot()
+        binding.gameLayout.setOnClickListener() {
 
-        meteor()
+            binding.menuTitle.textSize = 35f
+            binding.menuTitle.text = "Score: " + score + " Health: " + health
 
-        pause()
+            shoot()
 
-        gameHandler()
+            meteor()
+
+            pause()
+
+            gameHandler()
+        }
     }
 
     /**
@@ -73,6 +85,16 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         //(ÄNDRA SÅ INTE 280 ÄR KVAR!!!!!!!!)
         screenWidth = resources.displayMetrics.widthPixels - 280
         screenHeight = resources.displayMetrics.heightPixels
+    }
+
+    /**
+     *
+     */
+    private fun getStartValues() {
+
+        health = intent.getIntExtra("health", 100)
+        points = intent.getIntExtra("points", 1)
+        shipSpeed = intent.getIntExtra("speed", 2)
     }
 
     /**
@@ -101,13 +123,13 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         //Turing Left
         if(x > 0.5 && binding.spaceShip.x >= 0) {
 
-            binding.spaceShip.x -= x
+            binding.spaceShip.x -= (x * shipSpeed)
         }
 
         //Turning Right
         else if(x < -0.5 && binding.spaceShip.x < screenWidth) {
 
-            binding.spaceShip.x -= x
+            binding.spaceShip.x -= (x * shipSpeed)
         }
 
         //Standing still
@@ -187,7 +209,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         binding.metior.setImageDrawable(null)
         binding.metior.setImageResource(0)
 
-        Timer().scheduleAtFixedRate(object : TimerTask() {
+        meteorTimer.scheduleAtFixedRate(object : TimerTask() {
 
             override fun run() {
 
@@ -215,7 +237,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
      */
     private fun gameHandler() {
 
-        Timer().scheduleAtFixedRate(object : TimerTask() {
+        gameTimer.scheduleAtFixedRate(object : TimerTask() {
 
             override fun run() {
 
@@ -300,9 +322,31 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
      */
     private fun dead() {
 
-        val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("score", score)
-        startActivity(intent)
-        finish()
+        onStop()
+        gameTimer.cancel()
+        meteorTimer.cancel()
+
+        val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
+
+        builder.setTitle("Score")
+        builder.setMessage("Score: " + score + "\nDo you want to play again?")
+
+        builder.setPositiveButton("YES") {_, _ ->
+
+            val intent = Intent(this, GameActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        builder.setNegativeButton("NO") {_, _ ->
+
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("score", score)
+            startActivity(intent)
+            finish()
+        }
+
+        builder.create()
+        builder.show()
     }
 }
