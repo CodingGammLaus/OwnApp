@@ -9,25 +9,267 @@
         android:id="@+id/menu_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/stats_button"
+        android:text="@string/top"
         android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@id/menu_buttons"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/table"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintVertical_bias="0.1" />
 
-    <TextView
-        android:id="@+id/stats"
-        android:layout_width="wrap_content"
+    <TableLayout
+        android:id="@+id/table"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Your stats: 0"
-        android:textSize="30sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/blue"
         app:layout_constraintBottom_toTopOf="@id/menu_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
+        app:layout_constraintTop_toBottomOf="@+id/menu_title">
+
+        <TableRow
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1: Simon"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="510p"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:layout_gravity="right"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow
+            android:background="@color/white"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2: Simon"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/score_low"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0p"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:layout_gravity="right"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3: Simon"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/score_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0p"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:layout_gravity="right"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow
+            android:background="@color/white"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4: Simon"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/score_5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0p"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:layout_gravity="right"
+                android:layout_marginEnd="10dp"/>
+
+        </TableRow>
+
+        <TableRow
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5: Simon"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/score_6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0p"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:layout_gravity="right"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow
+            android:background="@color/white"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6: Simon"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/score_7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0p"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:layout_gravity="right"
+                android:layout_marginEnd="10dp"/>
+
+        </TableRow>
+
+        <TableRow
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="7: Simon"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/score_8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0p"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:layout_gravity="right"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow
+            android:background="@color/white"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8: Simon"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/score_9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0p"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:layout_gravity="right"
+                android:layout_marginEnd="10dp"/>
+        </TableRow>
+
+        <TableRow
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="9: Simon"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/score_10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0p"
+                android:textSize="24sp"
+                android:textColor="@color/white"
+                android:layout_gravity="right"
+                android:layout_marginEnd="10dp"/>
+
+        </TableRow>
+
+        <TableRow
+            android:background="@color/white"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10: Simon"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/score_11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0p"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+                android:layout_gravity="right"
+                android:layout_marginEnd="10dp"/>
+
+        </TableRow>
+
+    </TableLayout>
 
     <LinearLayout
         android:id="@+id/menu_buttons"
@@ -38,14 +280,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/menu_title" >
+        app:layout_constraintTop_toBottomOf="@id/table" >
 
         <Button
             android:id="@+id/back_button"
-            android:layout_width="150dp"
+            android:layout_width="200dp"
             android:layout_height="70dp"
-            android:text="Back"
-            android:layout_marginTop="20dp" />
+            android:text="BACK"
+            android:textStyle="bold"
+            android:backgroundTint="@color/blue"
+            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            app:cornerRadius="16dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,39 +6,142 @@
     android:layout_height="match_parent"
     android:id="@+id/game_layout">
 
-    <Button
+    <ImageView
         android:id="@+id/pause_button"
-        android:layout_width="85dp"
+        android:layout_width="50dp"
         android:layout_height="50dp"
-        android:text="Pause"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"/>
+        android:layout_marginEnd="20dp"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/pause_2"/>
+
+    <TextView
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score: 0"
+        android:textSize="25sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/healthy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/health"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Health:"
+            android:textSize="25sp" />
+
+        <ImageView
+            android:id="@+id/life_1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/filled_heart"/>
+
+        <ImageView
+            android:id="@+id/life_2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/filled_heart"/>
+
+        <ImageView
+            android:id="@+id/life_3"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/filled_heart"/>
+
+        <ImageView
+            android:id="@+id/life_4"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/filled_heart"/>
+
+        <ImageView
+            android:id="@+id/life_5"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/filled_heart"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/menu_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/menu_title"
+        android:text="Shoot moving meteors\nMove the ship by tilting"
         android:textSize="35sp"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/healthy"
         app:layout_constraintVertical_bias="0.1" />
 
     <ImageView
         android:id="@+id/metior"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        app:srcCompat="@drawable/metior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.4" />
+
+    <ImageView
+        android:id="@+id/arrow1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35"
+        android:layout_marginRight="130dp"
+        android:scaleX="-1"
+        android:scaleY="-1"/>
+
+    <ImageView
+        android:id="@+id/arrow2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:srcCompat="@drawable/arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35"
+        android:layout_marginLeft="130dp"
+        android:scaleX="1"
+        android:scaleY="-1"/>
+
+    <TextView
+        android:id="@+id/tap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tap to start!"
+        android:textSize="35sp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/healthy"
+        app:layout_constraintVertical_bias="0.4" />
 
     <ImageView
         android:id="@+id/missile"
@@ -59,6 +162,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.97" />
+        app:layout_constraintVertical_bias="0.99" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

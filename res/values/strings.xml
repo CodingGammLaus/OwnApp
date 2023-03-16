@@ -1,8 +1,23 @@
 <resources>
-    <string name="app_name">OwnApplication</string>
+    <string name="app_name">Laus invaders</string>
     <string name="menu_title">Menu</string>
     <string name="version">Version 1.0</string>
     <string name="play_button">Play</string>
     <string name="stats_button">Stats</string>
+    <string name="top">TOP 10</string>
     <string name="settings_button">Settings</string>
+
+
+    <!--Top list-->
+    <string name="top_1">1: </string>
+    <string name="top_2">2: </string>
+    <string name="top_3">3: </string>
+    <string name="top_4">4: </string>
+    <string name="top_5">5: </string>
+    <string name="top_6">6: </string>
+    <string name="top_7">7: </string>
+    <string name="top_8">8: </string>
+    <string name="top_9">9: </string>
+    <string name="top_10">10: </string>
+
 </resources>
