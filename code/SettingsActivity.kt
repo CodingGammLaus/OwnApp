@@ -12,7 +12,7 @@ class SettingsActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
 
-    private var health = 100
+    private var health = 3
     private var points = 1
     private var speed = 2
 
@@ -43,15 +43,15 @@ class SettingsActivity: AppCompatActivity() {
             when (checkedId) {
                 R.id.health_1 -> {
 
-                    health = 100
+                    health = 1
                 }
                 R.id.health_2 -> {
 
-                    health = 250
+                    health = 3
                 }
                 R.id.health_3 -> {
 
-                    health = 500
+                    health = 5
                 }
             }
         }

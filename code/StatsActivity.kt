@@ -8,6 +8,7 @@ import se.umu.cs.dv21sln.ownapplication.databinding.ActivityStatsBinding
 class StatsActivity : AppCompatActivity()  {
 
     private lateinit var binding: ActivityStatsBinding
+    private lateinit var statsList: ArrayList<Int>
 
     /**
      *

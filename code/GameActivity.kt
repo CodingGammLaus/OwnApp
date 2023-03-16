@@ -10,6 +10,7 @@ import android.hardware.SensorManager
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import se.umu.cs.dv21sln.ownapplication.databinding.ActivityGameBinding
 import java.util.*
 
@@ -35,10 +36,11 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     private var ship = Rect()
 
     /*Game options*/
+    private var startHealth = 4
     private var score = 0
     private var points = 10
-    private var health = 100
-    private var damage = 10
+    private var health = 3
+    private var damage = 1
     private var shipSpeed = 4
 
     private var paused = false
@@ -55,17 +57,20 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
         setDisplaySizeToGame()
         getStartValues()
+        loadInLife()
+
+        binding.pauseButton.isVisible = false
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         gyroSensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
 
-        binding.menuTitle.textSize = 25f
-        binding.menuTitle.text = "Press anywhere to start!\nTap to shoot and tilt to move"
-
         binding.gameLayout.setOnClickListener() {
 
-            binding.menuTitle.textSize = 35f
-            binding.menuTitle.text = "Score: " + score + " Health: " + health
+            binding.pauseButton.isVisible = true
+            binding.arrow1.setImageResource(0)
+            binding.arrow2.setImageResource(0)
+            binding.tap.text = ""
+            binding.menuTitle.text = ""
 
             shoot()
 
@@ -92,9 +97,11 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
      */
     private fun getStartValues() {
 
-        health = intent.getIntExtra("health", 100)
+        startHealth = intent.getIntExtra("health", 3)
         points = intent.getIntExtra("points", 1)
         shipSpeed = intent.getIntExtra("speed", 2)
+
+        health = startHealth
     }
 
     /**
@@ -150,54 +157,17 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
      */
     private fun shoot() {
 
-        binding.missile.x = binding.spaceShip.x
-        binding.missile.y = binding.spaceShip.y
-
         binding.gameLayout.setOnClickListener() {
 
             binding.missile.setImageResource(R.drawable.missile)
 
-            binding.missile.x = binding.spaceShip.x
+            binding.missile.x = binding.spaceShip.x + 75
             binding.missile.y = binding.spaceShip.y
 
             ObjectAnimator.ofFloat(binding.missile, "translationY", -2000f).apply {
                 duration = 300
                 start()
             }
-        }
-    }
-
-    /**
-     * Pause button init.
-     */
-    private fun pause() {
-
-        binding.pauseButton.setOnClickListener() {
-
-            onStop()
-            paused = true
-
-            val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
-
-            builder.setTitle("Quit")
-            builder.setMessage("Do you want to quit current game?")
-
-            builder.setPositiveButton("YES") {_, _ ->
-
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-
-            builder.setNegativeButton("NO") {_, _ ->
-
-                closeContextMenu()
-                onStart()
-                paused = false
-            }
-
-            builder.create()
-            builder.show()
         }
     }
 
@@ -261,7 +231,8 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
                         if(Rect.intersects(ship, meteor)) {
 
                             health -= damage
-                            binding.menuTitle.text = "Score: " + score + " Health: " + health
+
+                            removeLife()
 
                             deleteMeteor()
                         }
@@ -270,7 +241,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
                         else if(Rect.intersects(missile, meteor)) {
 
                             score += points
-                            binding.menuTitle.text = "Score: " + score + " Health: " + health
+                            binding.score.text = "Score: " + score
 
                             deleteMeteor()
                             deleteMissile()
@@ -291,6 +262,48 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
                 }
             }
         }, 20, 20)
+    }
+
+    /**
+     * Load in life bar.
+     */
+    private fun loadInLife() {
+
+        if (health == 3) {
+            binding.life5.setImageResource(0)
+            binding.life4.setImageResource(0)
+        }
+
+        else if(health == 1) {
+            binding.life5.setImageResource(0)
+            binding.life4.setImageResource(0)
+            binding.life3.setImageResource(0)
+            binding.life2.setImageResource(0)
+        }
+    }
+
+    /**
+     * Remove life from life bar.
+     */
+    private fun removeLife() {
+
+        when (health) {
+            4 -> {
+                binding.life5.setImageResource(R.drawable.empty_heart)
+            }
+            3 -> {
+                binding.life4.setImageResource(R.drawable.empty_heart)
+            }
+            2 -> {
+                binding.life3.setImageResource(R.drawable.empty_heart)
+            }
+            1 -> {
+                binding.life2.setImageResource(R.drawable.empty_heart)
+            }
+            0 -> {
+                binding.life1.setImageResource(R.drawable.empty_heart)
+            }
+        }
     }
 
     /**
@@ -334,6 +347,9 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         builder.setPositiveButton("YES") {_, _ ->
 
             val intent = Intent(this, GameActivity::class.java)
+            intent.putExtra("health", startHealth)
+            intent.putExtra("points", points)
+            intent.putExtra("speed", shipSpeed)
             startActivity(intent)
             finish()
         }
@@ -342,11 +358,48 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
             val intent = Intent(this, MainActivity::class.java)
             intent.putExtra("score", score)
+            intent.putExtra("health", startHealth)
+            intent.putExtra("points", points)
+            intent.putExtra("speed", shipSpeed)
             startActivity(intent)
             finish()
         }
 
         builder.create()
         builder.show()
+    }
+
+    /**
+     * Pause button init.
+     */
+    private fun pause() {
+
+        binding.pauseButton.setOnClickListener() {
+
+            onStop()
+            paused = true
+
+            val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
+
+            builder.setTitle("Quit")
+            builder.setMessage("Do you want to quit current game?")
+
+            builder.setPositiveButton("YES") {_, _ ->
+
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+
+            builder.setNegativeButton("NO") {_, _ ->
+
+                closeContextMenu()
+                onStart()
+                paused = false
+            }
+
+            builder.create()
+            builder.show()
+        }
     }
 }

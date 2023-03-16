@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private var health = 100
+    private var health = 3
     private var points = 1
     private var speed = 2
 
@@ -39,11 +39,11 @@ class MainActivity : AppCompatActivity() {
      */
     private fun getSettingsValues() {
 
-        health = intent.getIntExtra("health", 100)
+        health = intent.getIntExtra("health", 3)
         points = intent.getIntExtra("points", 1)
         speed = intent.getIntExtra("speed", 2)
 
-        binding.menuTitle.text = "Healt: " + health +
+        binding.menuTitle.text = "Health: " + health +
                 "\nPoints: " + points +
                 "\nSpeed: " + speed
     }
