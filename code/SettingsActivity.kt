@@ -25,13 +25,16 @@ class SettingsActivity: AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.title = "Settings"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         setHealth()
 
         setPoints()
 
         setSpeed()
 
-        back()
+        button()
     }
 
     /**
@@ -104,11 +107,11 @@ class SettingsActivity: AppCompatActivity() {
     }
 
     /**
-     * Back to main screen with the marked choices.
+     *
      */
-    private fun back() {
+    private fun button() {
 
-        binding.backButton.setOnClickListener() {
+        binding.settingsButton.setOnClickListener() {
 
             val intent = Intent(this, MainActivity::class.java)
             intent.putExtra("health", health)

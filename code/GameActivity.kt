@@ -54,6 +54,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
         setDisplaySizeToGame()
         getStartValues()
@@ -76,7 +77,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
             meteor()
 
-            pause()
+            pauseButton()
 
             gameHandler()
         }
@@ -289,19 +290,19 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
         when (health) {
             4 -> {
-                binding.life5.setImageResource(R.drawable.empty_heart)
+                binding.life5.setImageResource(R.drawable.white_2)
             }
             3 -> {
-                binding.life4.setImageResource(R.drawable.empty_heart)
+                binding.life4.setImageResource(R.drawable.white_2)
             }
             2 -> {
-                binding.life3.setImageResource(R.drawable.empty_heart)
+                binding.life3.setImageResource(R.drawable.white_2)
             }
             1 -> {
-                binding.life2.setImageResource(R.drawable.empty_heart)
+                binding.life2.setImageResource(R.drawable.white_2)
             }
             0 -> {
-                binding.life1.setImageResource(R.drawable.empty_heart)
+                binding.life1.setImageResource(R.drawable.white_2)
             }
         }
     }
@@ -356,13 +357,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
         builder.setNegativeButton("NO") {_, _ ->
 
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("score", score)
-            intent.putExtra("health", startHealth)
-            intent.putExtra("points", points)
-            intent.putExtra("speed", shipSpeed)
-            startActivity(intent)
-            finish()
+            backToMenu()
         }
 
         builder.create()
@@ -372,34 +367,61 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     /**
      * Pause button init.
      */
-    private fun pause() {
+    private fun pauseButton() {
 
         binding.pauseButton.setOnClickListener() {
 
-            onStop()
-            paused = true
-
-            val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
-
-            builder.setTitle("Quit")
-            builder.setMessage("Do you want to quit current game?")
-
-            builder.setPositiveButton("YES") {_, _ ->
-
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-
-            builder.setNegativeButton("NO") {_, _ ->
-
-                closeContextMenu()
-                onStart()
-                paused = false
-            }
-
-            builder.create()
-            builder.show()
+            pause()
         }
+    }
+
+    /**
+     * Pause the game when back button is pressed.
+     */
+    override fun onBackPressed() {
+        pause()
+    }
+
+    /**
+     * Pause game, and ask if player want to quit or keep playing.
+     */
+    private fun pause() {
+
+        onStop()
+        paused = true
+
+        val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
+
+        builder.setTitle("Quit")
+        builder.setMessage("Do you want to quit current game?")
+
+        builder.setPositiveButton("YES") {_, _ ->
+
+            backToMenu()
+        }
+
+        builder.setNegativeButton("NO") {_, _ ->
+
+            closeContextMenu()
+            onStart()
+            paused = false
+        }
+
+        builder.create()
+        builder.show()
+    }
+
+    /**
+     * Back to menu with correct values.
+     */
+    private fun backToMenu() {
+
+        val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("score", score)
+        intent.putExtra("health", startHealth)
+        intent.putExtra("points", points)
+        intent.putExtra("speed", shipSpeed)
+        startActivity(intent)
+        finish()
     }
 }

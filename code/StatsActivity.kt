@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import se.umu.cs.dv21sln.ownapplication.databinding.ActivityStatsBinding
 
+
 class StatsActivity : AppCompatActivity()  {
 
     private lateinit var binding: ActivityStatsBinding
@@ -19,19 +20,7 @@ class StatsActivity : AppCompatActivity()  {
         binding = ActivityStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        back()
-    }
-
-    /**
-     * Back to main screen.
-     */
-    private fun back() {
-
-        binding.backButton.setOnClickListener() {
-
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+        supportActionBar?.title = "Stats"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 }

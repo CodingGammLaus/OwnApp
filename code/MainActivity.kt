@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         points = intent.getIntExtra("points", 1)
         speed = intent.getIntExtra("speed", 2)
 
-        binding.menuTitle.text = "Health: " + health +
+        binding.setting.text = "Health: " + health +
                 "\nPoints: " + points +
                 "\nSpeed: " + speed
     }
@@ -60,7 +60,6 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("points", points)
             intent.putExtra("speed", speed)
             startActivity(intent)
-            finish()
         }
     }
 
@@ -73,7 +72,6 @@ class MainActivity : AppCompatActivity() {
 
             val intent = Intent(this, StatsActivity::class.java)
             startActivity(intent)
-            finish()
         }
     }
 
@@ -86,7 +84,6 @@ class MainActivity : AppCompatActivity() {
 
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
-            finish()
         }
     }
 }
