@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/space"
     android:id="@+id/game_layout">
 
     <ImageView
@@ -15,13 +16,14 @@
         app:cornerRadius="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/pause_2"/>
+        app:srcCompat="@drawable/pause_w_2"/>
 
     <TextView
         android:id="@+id/score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Score: 0"
+        android:textColor="@color/white"
         android:textSize="25sp"
         android:layout_marginTop="20dp"
         android:layout_marginStart="10dp"
@@ -44,6 +46,7 @@
             android:id="@+id/health"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:text="Health:"
             android:textSize="25sp" />
 
@@ -51,31 +54,31 @@
             android:id="@+id/life_1"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            app:srcCompat="@drawable/filled_heart"/>
+            app:srcCompat="@drawable/white_1"/>
 
         <ImageView
             android:id="@+id/life_2"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            app:srcCompat="@drawable/filled_heart"/>
+            app:srcCompat="@drawable/white_1"/>
 
         <ImageView
             android:id="@+id/life_3"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            app:srcCompat="@drawable/filled_heart"/>
+            app:srcCompat="@drawable/white_1"/>
 
         <ImageView
             android:id="@+id/life_4"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            app:srcCompat="@drawable/filled_heart"/>
+            app:srcCompat="@drawable/white_1"/>
 
         <ImageView
             android:id="@+id/life_5"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            app:srcCompat="@drawable/filled_heart"/>
+            app:srcCompat="@drawable/white_1"/>
 
     </LinearLayout>
 
@@ -85,6 +88,7 @@
         android:layout_height="wrap_content"
         android:text="Shoot moving meteors\nMove the ship by tilting"
         android:textSize="35sp"
+        android:textColor="@color/white"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -136,6 +140,7 @@
         android:layout_height="wrap_content"
         android:text="Tap to start!"
         android:textSize="35sp"
+        android:textColor="@color/white"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
