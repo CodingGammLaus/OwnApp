@@ -14,6 +14,8 @@ class MainActivity : AppCompatActivity() {
     private var points = 1
     private var speed = 2
 
+    private var score = 0
+
     /**
      *
      */
@@ -23,8 +25,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val score = intent.getIntExtra("score", 0)
-
         getSettingsValues()
 
         play()
@@ -32,6 +32,11 @@ class MainActivity : AppCompatActivity() {
         stats()
 
         settings()
+
+        /*val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
+        score = sharedPref.getInt("score1", 0)
+
+        binding.setting.text = "Highscore: " + score*/
     }
 
     /**
@@ -39,9 +44,10 @@ class MainActivity : AppCompatActivity() {
      */
     private fun getSettingsValues() {
 
-        health = intent.getIntExtra("health", 3)
-        points = intent.getIntExtra("points", 1)
-        speed = intent.getIntExtra("speed", 2)
+        val sharedPref = getSharedPreferences("settings", MODE_PRIVATE)
+        health = sharedPref.getInt("health", 0)
+        points = sharedPref.getInt("points", 0)
+        speed = sharedPref.getInt("speed", 0)
 
         binding.setting.text = "Health: " + health +
                 "\nPoints: " + points +
@@ -56,9 +62,6 @@ class MainActivity : AppCompatActivity() {
         binding.playButton.setOnClickListener() {
 
             val intent = Intent(this, GameActivity::class.java)
-            intent.putExtra("health", health)
-            intent.putExtra("points", points)
-            intent.putExtra("speed", speed)
             startActivity(intent)
         }
     }
@@ -85,5 +88,14 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        /*val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
+
+        val editor = sharedPref.edit()
+        editor.putInt("highScore", score)
+        editor.commit()*/
     }
 }

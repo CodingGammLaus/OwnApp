@@ -98,9 +98,10 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
      */
     private fun getStartValues() {
 
-        startHealth = intent.getIntExtra("health", 3)
-        points = intent.getIntExtra("points", 1)
-        shipSpeed = intent.getIntExtra("speed", 2)
+        val sharedPref = getSharedPreferences("settings", MODE_PRIVATE)
+        startHealth = sharedPref.getInt("health", 0)
+        points = sharedPref.getInt("points", 0)
+        shipSpeed = sharedPref.getInt("speed", 0)
 
         health = startHealth
     }
@@ -348,15 +349,13 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         builder.setPositiveButton("YES") {_, _ ->
 
             val intent = Intent(this, GameActivity::class.java)
-            intent.putExtra("health", startHealth)
-            intent.putExtra("points", points)
-            intent.putExtra("speed", shipSpeed)
             startActivity(intent)
             finish()
         }
 
         builder.setNegativeButton("NO") {_, _ ->
 
+            addScoreToScoreList()
             backToMenu()
         }
 
@@ -412,15 +411,39 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     }
 
     /**
+     *
+     */
+    private fun addScoreToScoreList() {
+
+        val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
+
+        val arr = arrayOf<Int>(
+            sharedPref.getInt("score1", 0),
+            sharedPref.getInt("score2", 0),
+            sharedPref.getInt("score3", 0),
+            sharedPref.getInt("score4", 0),
+            sharedPref.getInt("score5", 0),
+            0
+        )
+
+        arr[5] = score
+        arr.sortDescending()
+
+        val editor = sharedPref.edit()
+        editor.putInt("score1", arr[0])
+        editor.putInt("score2", arr[1])
+        editor.putInt("score3", arr[2])
+        editor.putInt("score4", arr[3])
+        editor.putInt("score5", arr[4])
+        editor.apply()
+    }
+
+    /**
      * Back to menu with correct values.
      */
     private fun backToMenu() {
 
         val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("score", score)
-        intent.putExtra("health", startHealth)
-        intent.putExtra("points", points)
-        intent.putExtra("speed", shipSpeed)
         startActivity(intent)
         finish()
     }
