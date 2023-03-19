@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/spaceship"
+        android:icon="@drawable/laus_invaders"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.OwnApplication"
@@ -16,12 +16,17 @@
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".GameOptionsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"/>
+        <activity
             android:name=".SettingsActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity"/>
         <activity
-            android:name=".StatsActivity"
+            android:name=".TopListActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity"/>
