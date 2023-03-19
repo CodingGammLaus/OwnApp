@@ -8,6 +8,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -55,6 +56,9 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+
+        val sharedPref = getSharedPreferences("background", MODE_PRIVATE)
+        binding.gameLayout.setBackgroundResource(sharedPref.getInt("pic", R.drawable.space))
 
         setDisplaySizeToGame()
         getStartValues()
@@ -291,19 +295,19 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
         when (health) {
             4 -> {
-                binding.life5.setImageResource(R.drawable.white_2)
+                binding.life5.setImageResource(R.drawable.favorite_border_24)
             }
             3 -> {
-                binding.life4.setImageResource(R.drawable.white_2)
+                binding.life4.setImageResource(R.drawable.favorite_border_24)
             }
             2 -> {
-                binding.life3.setImageResource(R.drawable.white_2)
+                binding.life3.setImageResource(R.drawable.favorite_border_24)
             }
             1 -> {
-                binding.life2.setImageResource(R.drawable.white_2)
+                binding.life2.setImageResource(R.drawable.favorite_border_24)
             }
             0 -> {
-                binding.life1.setImageResource(R.drawable.white_2)
+                binding.life1.setImageResource(R.drawable.favorite_border_24)
             }
         }
     }
@@ -330,37 +334,6 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
         binding.missile.x = 10000f
         binding.missile.y = 10000f
-    }
-
-    /**
-     * When player died
-     */
-    private fun dead() {
-
-        onStop()
-        gameTimer.cancel()
-        meteorTimer.cancel()
-
-        val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
-
-        builder.setTitle("Score")
-        builder.setMessage("Score: " + score + "\nDo you want to play again?")
-
-        builder.setPositiveButton("YES") {_, _ ->
-
-            val intent = Intent(this, GameActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-
-        builder.setNegativeButton("NO") {_, _ ->
-
-            addScoreToScoreList()
-            backToMenu()
-        }
-
-        builder.create()
-        builder.show()
     }
 
     /**
@@ -413,7 +386,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     /**
      *
      */
-    private fun addScoreToScoreList() {
+    private fun addScoreToScoreList(name: String) {
 
         val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
 
@@ -439,6 +412,41 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     }
 
     /**
+     * When player died, write in player name and ask if they want to play again.
+     */
+    private fun dead() {
+
+        onStop()
+        gameTimer.cancel()
+        meteorTimer.cancel()
+
+        val input = EditText(this)
+
+        val alert = AlertDialog.Builder(this, R.style.MyDialogTheme)
+
+        alert.setTitle("Enter Name")
+        alert.setView(input)
+        alert.setMessage("Enter your name for the top list")
+        alert.setPositiveButton("Play Again") { dialog, _ ->
+
+            dialog.cancel()
+            addScoreToScoreList(input.text.toString())
+
+            val intent = Intent(this, GameActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        alert.setNegativeButton("Exit") {_, _ ->
+
+            addScoreToScoreList(input.text.toString())
+            backToMenu()
+        }.create()
+
+        alert.show()
+    }
+
+    /**
      * Back to menu with correct values.
      */
     private fun backToMenu() {
@@ -447,4 +455,32 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         startActivity(intent)
         finish()
     }
+
+    /**
+     * Ask to play again.
+     */
+    /*private fun playAgain() {
+
+        val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
+
+        builder.setTitle("Score")
+        builder.setMessage("Score: " + score + "\nDo you want to play again?")
+
+        builder.setPositiveButton("YES") {_, _ ->
+
+            addScoreToScoreList()
+            val intent = Intent(this, GameActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        builder.setNegativeButton("NO") {_, _ ->
+
+            addScoreToScoreList()
+            backToMenu()
+        }
+
+        builder.create()
+        builder.show()
+    }*/
 }

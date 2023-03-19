@@ -1,18 +1,14 @@
 package se.umu.cs.dv21sln.ownapplication
 
-import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import se.umu.cs.dv21sln.ownapplication.databinding.ActivitySettingsBinding
 
-class SettingsActivity: AppCompatActivity() {
+
+class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
-
-    /*Starting values*/
-    private var health = 3
-    private var points = 1
-    private var speed = 2
 
     /**
      *
@@ -23,184 +19,83 @@ class SettingsActivity: AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val sharedPref = getSharedPreferences("background", MODE_PRIVATE)
+        binding.main.setBackgroundResource(sharedPref.getInt("pic", R.drawable.space))
+
         supportActionBar?.title = "Settings"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        getValues()
+        changeBackground()
 
-        setHealth()
-
-        setPoints()
-
-        setSpeed()
-
-        button()
+        resetTopList()
     }
 
     /**
-     * Get the values.
+     *
      */
-    private fun getValues() {
+    private fun changeBackground() {
 
-        val sharedPref = getSharedPreferences("settings", MODE_PRIVATE)
-        health = sharedPref.getInt("health", 0)
-        points = sharedPref.getInt("points", 0)
-        speed = sharedPref.getInt("speed", 0)
+        val sharedPref = getSharedPreferences("background", MODE_PRIVATE)
+        val editor = sharedPref.edit()
 
-        getHealth()
-        getPoints()
-        getSpeed()
-    }
+        /*Change to regular space background*/
+        binding.regularSpaceBackground.setOnClickListener() {
 
-    /**
-     * Set the health value.
-     */
-    private fun setHealth() {
+            binding.main.setBackgroundResource(R.drawable.space)
 
-        binding.healthGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.health_1 -> {
-
-                    health = 1
-                }
-                R.id.health_2 -> {
-
-                    health = 3
-                }
-                R.id.health_3 -> {
-
-                    health = 5
-                }
-            }
+            editor.putInt("pic", R.drawable.space)
+            editor.apply()
         }
-    }
 
-    /**
-     * Set the points value.
-     */
-    private fun setPoints() {
+        /*Change to color space background*/
+        binding.colorSpaceBackground.setOnClickListener() {
 
-        binding.pointsGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.points_1 -> {
+            binding.main.setBackgroundResource(R.drawable.color_space)
 
-                    points = 1
-                }
-                R.id.points_2 -> {
-
-                    points = 5
-                }
-                R.id.points_3 -> {
-
-                    points = 10
-                }
-            }
-        }
-    }
-
-    /**
-     * Set the speed value.
-     */
-    private fun setSpeed() {
-
-        binding.speedGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.speed_1 -> {
-
-                    speed = 2
-                }
-                R.id.speed_2 -> {
-
-                    speed = 4
-                }
-                R.id.speed_3 -> {
-
-                    speed = 8
-                }
-            }
+            editor.putInt("pic", R.drawable.color_space)
+            editor.apply()
         }
     }
 
     /**
      *
      */
-    private fun button() {
+    private fun resetTopList() {
 
-        binding.settingsButton.setOnClickListener() {
+        binding.resetStats.setOnClickListener() {
 
-            val sharedPref = getSharedPreferences("settings", MODE_PRIVATE)
-            val editor = sharedPref.edit()
-            editor.putInt("health", health)
-            editor.putInt("points", points)
-            editor.putInt("speed", speed)
-            editor.apply()
+            val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
 
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            builder.setTitle("Reset score")
+            builder.setMessage("Do you want to reset the score list?")
+
+            builder.setPositiveButton("YES") {_, _ ->
+
+                clearTopList()
+            }
+
+            builder.setNegativeButton("NO") {_, _ ->
+
+                closeContextMenu()
+            }
+
+            builder.create()
+            builder.show()
         }
     }
 
     /**
-     * Get the health value.
+     *
      */
-    private fun getHealth() {
+    private fun clearTopList() {
 
-        if(health == 1) {
-
-            binding.health1.isChecked = true
-        }
-
-        else if (health == 3) {
-
-            binding.health2.isChecked = true
-        }
-
-        else if (health == 5) {
-
-            binding.health3.isChecked = true
-        }
-    }
-
-    /**
-     * Get the points value
-     */
-    private fun getPoints() {
-
-        if(points == 1) {
-
-            binding.points1.isChecked = true
-        }
-
-        else if (points == 5) {
-
-            binding.points2.isChecked = true
-        }
-
-        else if (points == 10) {
-
-            binding.points3.isChecked = true
-        }
-    }
-
-    /**
-     * Get the speed value.
-     */
-    private fun getSpeed() {
-
-        if(speed == 2) {
-
-            binding.speed1.isChecked = true
-        }
-
-        else if (speed == 4) {
-
-            binding.speed2.isChecked = true
-        }
-
-        else if (speed == 8) {
-
-            binding.speed3.isChecked = true
-        }
+        val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putInt("score1", 0)
+        editor.putInt("score2", 0)
+        editor.putInt("score3", 0)
+        editor.putInt("score4", 0)
+        editor.putInt("score5", 0)
+        editor.apply()
     }
 }

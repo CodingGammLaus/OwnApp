@@ -2,6 +2,8 @@ package se.umu.cs.dv21sln.ownapplication
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import se.umu.cs.dv21sln.ownapplication.databinding.ActivityMainBinding
 
@@ -14,7 +16,7 @@ class MainActivity : AppCompatActivity() {
     private var points = 1
     private var speed = 2
 
-    private var score = 0
+    private var highScore = 0
 
     /**
      *
@@ -25,33 +27,27 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        getSettingsValues()
+        val sharedPref = getSharedPreferences("background", MODE_PRIVATE)
+        binding.main.setBackgroundResource(sharedPref.getInt("pic", R.drawable.space))
 
         play()
 
         stats()
 
-        settings()
+        gameOptions()
 
-        /*val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
-        score = sharedPref.getInt("score1", 0)
-
-        binding.setting.text = "Highscore: " + score*/
+        setHighScore()
     }
 
     /**
-     *
+     * Set the High score text.
      */
-    private fun getSettingsValues() {
+    private fun setHighScore() {
 
-        val sharedPref = getSharedPreferences("settings", MODE_PRIVATE)
-        health = sharedPref.getInt("health", 0)
-        points = sharedPref.getInt("points", 0)
-        speed = sharedPref.getInt("speed", 0)
+        val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
+        highScore = sharedPref.getInt("score1", 0)
 
-        binding.setting.text = "Health: " + health +
-                "\nPoints: " + points +
-                "\nSpeed: " + speed
+        binding.highscore.text = "Highscore: " + highScore
     }
 
     /**
@@ -73,29 +69,43 @@ class MainActivity : AppCompatActivity() {
 
         binding.statsButton.setOnClickListener() {
 
-            val intent = Intent(this, StatsActivity::class.java)
+            val intent = Intent(this, TopListActivity::class.java)
             startActivity(intent)
         }
     }
 
     /**
-     * Settings init
+     * Game options init
      */
-    private fun settings() {
+    private fun gameOptions() {
 
         binding.settingsButton.setOnClickListener() {
 
-            val intent = Intent(this, SettingsActivity::class.java)
+            val intent = Intent(this, GameOptionsActivity::class.java)
             startActivity(intent)
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        /*val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
+    /**
+     *
+     */
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 
-        val editor = sharedPref.edit()
-        editor.putInt("highScore", score)
-        editor.commit()*/
+    /**
+     *
+     */
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.settings -> {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+            true
+        }
+
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
     }
 }
