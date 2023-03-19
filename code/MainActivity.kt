@@ -27,9 +27,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val sharedPref = getSharedPreferences("background", MODE_PRIVATE)
-        binding.main.setBackgroundResource(sharedPref.getInt("pic", R.drawable.space))
-
         play()
 
         stats()
@@ -107,5 +104,15 @@ class MainActivity : AppCompatActivity() {
         else -> {
             super.onOptionsItemSelected(item)
         }
+    }
+
+    /**
+     *
+     */
+    override fun onResume() {
+        super.onResume()
+
+        val sharedPref = getSharedPreferences("background", MODE_PRIVATE)
+        binding.main.setBackgroundResource(sharedPref.getInt("pic", R.drawable.space))
     }
 }

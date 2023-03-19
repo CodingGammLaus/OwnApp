@@ -33,16 +33,17 @@ class TopListActivity : AppCompatActivity()  {
     private fun getScore() {
 
         val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
-        val score1 = sharedPref.getInt("score1", 0)
-        val score2 = sharedPref.getInt("score2", 0)
-        val score3 = sharedPref.getInt("score3", 0)
-        val score4 = sharedPref.getInt("score4", 0)
-        val score5 = sharedPref.getInt("score5", 0)
 
-        binding.score1.text = score1.toString()
-        binding.score2.text = score2.toString()
-        binding.score3.text = score3.toString()
-        binding.score4.text = score4.toString()
-        binding.score5.text = score5.toString()
+        binding.score1.text = sharedPref.getInt("score1", 0).toString()
+        binding.score2.text = sharedPref.getInt("score2", 0).toString()
+        binding.score3.text = sharedPref.getInt("score3", 0).toString()
+        binding.score4.text = sharedPref.getInt("score4", 0).toString()
+        binding.score5.text = sharedPref.getInt("score5", 0).toString()
+
+        binding.name1.text = sharedPref.getString("name1", "-")
+        binding.name2.text = sharedPref.getString("name2", "-")
+        binding.name3.text = sharedPref.getString("name3", "-")
+        binding.name4.text = sharedPref.getString("name4", "-")
+        binding.name5.text = sharedPref.getString("name5", "-")
     }
 }

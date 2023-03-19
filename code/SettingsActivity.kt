@@ -91,11 +91,18 @@ class SettingsActivity : AppCompatActivity() {
 
         val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
         val editor = sharedPref.edit()
+
         editor.putInt("score1", 0)
         editor.putInt("score2", 0)
         editor.putInt("score3", 0)
         editor.putInt("score4", 0)
         editor.putInt("score5", 0)
+
+        editor.putString("name1", "-")
+        editor.putString("name2", "-")
+        editor.putString("name3", "-")
+        editor.putString("name4", "-")
+        editor.putString("name5", "-")
         editor.apply()
     }
 }

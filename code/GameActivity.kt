@@ -230,7 +230,10 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
                         if(health <= 0) {
 
                             cancel()
-                            dead()
+                            onStop()
+                            gameTimer.cancel()
+                            meteorTimer.cancel()
+                            checkIfOnTopList()
                         }
 
                         //Meteor hits ship
@@ -386,7 +389,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     /**
      *
      */
-    private fun addScoreToScoreList(name: String) {
+    private fun addScoreToScoreList(newName: String) {
 
         val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
 
@@ -408,17 +411,101 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         editor.putInt("score3", arr[2])
         editor.putInt("score4", arr[3])
         editor.putInt("score5", arr[4])
+
+        if(score == arr[0]) {
+
+            editor.putString("name5", sharedPref.getString("name4", "-"))
+            editor.putString("name4", sharedPref.getString("name3", "-"))
+            editor.putString("name3", sharedPref.getString("name2", "-"))
+            editor.putString("name2", sharedPref.getString("name1", "-"))
+            editor.putString("name1", newName)
+        }
+
+        else if(score == arr[1]) {
+
+            editor.putString("name5", sharedPref.getString("name4", "-"))
+            editor.putString("name4", sharedPref.getString("name3", "-"))
+            editor.putString("name3", sharedPref.getString("name2", "-"))
+            editor.putString("name2", newName)
+        }
+
+        else if(score == arr[2]) {
+
+            editor.putString("name5", sharedPref.getString("name4", "-"))
+            editor.putString("name4", sharedPref.getString("name3", "-"))
+            editor.putString("name3", newName)
+        }
+
+        else if(score == arr[3]) {
+
+            editor.putString("name5", sharedPref.getString("name4", "-"))
+            editor.putString("name4", newName)
+
+        }
+
+        else if(score == arr[4]) {
+
+            editor.putString("name5", newName)
+        }
+
         editor.apply()
     }
 
     /**
-     * When player died, write in player name and ask if they want to play again.
+     * Checks if player did make it to the top list.
      */
-    private fun dead() {
+    private fun checkIfOnTopList() {
 
-        onStop()
-        gameTimer.cancel()
-        meteorTimer.cancel()
+        val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
+
+        val arr = arrayOf<Int>(
+            sharedPref.getInt("score1", 0),
+            sharedPref.getInt("score2", 0),
+            sharedPref.getInt("score3", 0),
+            sharedPref.getInt("score4", 0),
+            sharedPref.getInt("score5", 0)
+        )
+
+        for(i in 0..4) {
+
+            if(score >= arr[i]) {
+
+                onTopList()
+                return
+            }
+        }
+
+        notOnTopList()
+    }
+
+    /**
+     * Request to play again if player didn't make it to the top list.
+     */
+    private fun notOnTopList() {
+
+        val alert = AlertDialog.Builder(this, R.style.MyDialogTheme)
+
+        alert.setTitle("Play again")
+        alert.setMessage("You didn't make it to the top list.\nDo you want to try again?")
+        alert.setPositiveButton("Yes") {_, _ ->
+
+            val intent = Intent(this, GameActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        alert.setNegativeButton("No") {_, _ ->
+
+            backToMenu()
+        }.create()
+
+        alert.show()
+    }
+
+    /**
+     * Player writes name to be added to the top list, and requested to play again.
+     */
+    private fun onTopList() {
 
         val input = EditText(this)
 
@@ -455,32 +542,4 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         startActivity(intent)
         finish()
     }
-
-    /**
-     * Ask to play again.
-     */
-    /*private fun playAgain() {
-
-        val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
-
-        builder.setTitle("Score")
-        builder.setMessage("Score: " + score + "\nDo you want to play again?")
-
-        builder.setPositiveButton("YES") {_, _ ->
-
-            addScoreToScoreList()
-            val intent = Intent(this, GameActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-
-        builder.setNegativeButton("NO") {_, _ ->
-
-            addScoreToScoreList()
-            backToMenu()
-        }
-
-        builder.create()
-        builder.show()
-    }*/
 }
