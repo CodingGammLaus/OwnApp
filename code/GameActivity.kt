@@ -39,10 +39,10 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     /*Game options*/
     private var startHealth = 4
     private var score = 0
-    private var points = 10
+    private var points = 5
     private var health = 3
     private var damage = 1
-    private var shipSpeed = 4
+    private var shipSpeed = 2
 
     private var paused = false
 
@@ -58,7 +58,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         supportActionBar?.hide()
 
         val sharedPref = getSharedPreferences("background", MODE_PRIVATE)
-        binding.gameLayout.setBackgroundResource(sharedPref.getInt("pic", R.drawable.space))
+        binding.gameLayout.setBackgroundResource(sharedPref.getInt("pic", R.drawable.background_2))
 
         setDisplaySizeToGame()
         getStartValues()
@@ -103,9 +103,9 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     private fun getStartValues() {
 
         val sharedPref = getSharedPreferences("settings", MODE_PRIVATE)
-        startHealth = sharedPref.getInt("health", 0)
-        points = sharedPref.getInt("points", 0)
-        shipSpeed = sharedPref.getInt("speed", 0)
+        startHealth = sharedPref.getInt("health", 3)
+        points = sharedPref.getInt("points", 5)
+        shipSpeed = sharedPref.getInt("speed", 2)
 
         health = startHealth
     }
@@ -389,7 +389,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     /**
      *
      */
-    private fun addScoreToScoreList(newName: String) {
+    private fun addScoreToScoreList(name: String) {
 
         val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
 
@@ -411,6 +411,12 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         editor.putInt("score3", arr[2])
         editor.putInt("score4", arr[3])
         editor.putInt("score5", arr[4])
+
+        /*Set name to Unknown if player leave name field empty*/
+        var newName = name
+        if(newName == "") {
+            newName = "Unknown"
+        }
 
         if(score == arr[0]) {
 
@@ -468,7 +474,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
         for(i in 0..4) {
 
-            if(score >= arr[i]) {
+            if(score >= arr[i] && score > 0) {
 
                 onTopList()
                 return

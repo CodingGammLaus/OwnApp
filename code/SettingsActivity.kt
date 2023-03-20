@@ -20,7 +20,7 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val sharedPref = getSharedPreferences("background", MODE_PRIVATE)
-        binding.main.setBackgroundResource(sharedPref.getInt("pic", R.drawable.space))
+        binding.main.setBackgroundResource(sharedPref.getInt("pic", R.drawable.background_2))
 
         supportActionBar?.title = "Settings"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -38,21 +38,37 @@ class SettingsActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("background", MODE_PRIVATE)
         val editor = sharedPref.edit()
 
-        /*Change to regular space background*/
-        binding.regularSpaceBackground.setOnClickListener() {
+        /*Change to color space background*/
+        binding.backgroundButton1.setOnClickListener() {
 
-            binding.main.setBackgroundResource(R.drawable.space)
+            binding.main.setBackgroundResource(R.drawable.background_1)
 
-            editor.putInt("pic", R.drawable.space)
+            editor.putInt("pic", R.drawable.background_1)
             editor.apply()
         }
 
-        /*Change to color space background*/
-        binding.colorSpaceBackground.setOnClickListener() {
+        /*Change to regular space background*/
+        binding.backgroundButton2.setOnClickListener() {
 
-            binding.main.setBackgroundResource(R.drawable.color_space)
+            binding.main.setBackgroundResource(R.drawable.background_2)
 
-            editor.putInt("pic", R.drawable.color_space)
+            editor.putInt("pic", R.drawable.background_2)
+            editor.apply()
+        }
+
+        binding.backgroundButton3.setOnClickListener() {
+
+            binding.main.setBackgroundResource(R.drawable.background_3)
+
+            editor.putInt("pic", R.drawable.background_3)
+            editor.apply()
+        }
+
+        binding.backgroundButton4.setOnClickListener() {
+
+            binding.main.setBackgroundResource(R.drawable.background_4)
+
+            editor.putInt("pic", R.drawable.background_4)
             editor.apply()
         }
     }

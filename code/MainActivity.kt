@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import se.umu.cs.dv21sln.ownapplication.databinding.ActivityMainBinding
 
@@ -11,10 +12,6 @@ import se.umu.cs.dv21sln.ownapplication.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    private var health = 3
-    private var points = 1
-    private var speed = 2
 
     private var highScore = 0
 
@@ -113,6 +110,28 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         val sharedPref = getSharedPreferences("background", MODE_PRIVATE)
-        binding.main.setBackgroundResource(sharedPref.getInt("pic", R.drawable.space))
+        binding.main.setBackgroundResource(sharedPref.getInt("pic", R.drawable.background_2))
+    }
+
+    /**
+     *
+     */
+    override fun onBackPressed() {
+
+        val alert = AlertDialog.Builder(this, R.style.MyDialogTheme)
+
+        alert.setTitle("Exit application")
+        alert.setMessage("Do you want to exit the application?")
+        alert.setPositiveButton("Yes") {_, _ ->
+
+            finish()
+        }
+
+        alert.setNegativeButton("No") {_, _ ->
+
+            closeContextMenu()
+        }.create()
+
+        alert.show()
     }
 }

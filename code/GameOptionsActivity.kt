@@ -11,7 +11,7 @@ class GameOptionsActivity: AppCompatActivity() {
 
     /*Starting values*/
     private var health = 3
-    private var points = 1
+    private var points = 5
     private var speed = 2
 
     /**
@@ -24,7 +24,7 @@ class GameOptionsActivity: AppCompatActivity() {
         setContentView(binding.root)
 
         val sharedPref = getSharedPreferences("background", MODE_PRIVATE)
-        binding.main.setBackgroundResource(sharedPref.getInt("pic", R.drawable.space))
+        binding.main.setBackgroundResource(sharedPref.getInt("pic", R.drawable.background_2))
 
         supportActionBar?.title = "Game options"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -46,9 +46,9 @@ class GameOptionsActivity: AppCompatActivity() {
     private fun getValues() {
 
         val sharedPref = getSharedPreferences("settings", MODE_PRIVATE)
-        health = sharedPref.getInt("health", 0)
-        points = sharedPref.getInt("points", 0)
-        speed = sharedPref.getInt("speed", 0)
+        health = sharedPref.getInt("health", 3)
+        points = sharedPref.getInt("points", 5)
+        speed = sharedPref.getInt("speed", 2)
 
         getHealth()
         getPoints()

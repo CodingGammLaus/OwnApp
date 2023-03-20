@@ -19,7 +19,7 @@ class TopListActivity : AppCompatActivity()  {
         setContentView(binding.root)
 
         val sharedPref = getSharedPreferences("background", MODE_PRIVATE)
-        binding.main.setBackgroundResource(sharedPref.getInt("pic", R.drawable.space))
+        binding.main.setBackgroundResource(sharedPref.getInt("pic", R.drawable.background_2))
 
         supportActionBar?.title = "Top List"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
