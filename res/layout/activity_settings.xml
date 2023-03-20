@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/space"
+    android:background="@drawable/background_2"
     android:id="@+id/main">
 
     <TextView
-        android:id="@+id/settings"
+        android:id="@+id/background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settings"
-        android:textSize="32sp"
+        android:text="@string/background"
+        android:textSize="30sp"
         android:textStyle="bold"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@id/box"
@@ -20,27 +20,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/background"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/box"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/settings"/>
-
     <LinearLayout
         android:id="@+id/box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/box2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/background">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -48,21 +35,21 @@
             android:orientation="vertical"
             android:background="@drawable/settings_box"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingBottom="5dp"
             android:layout_marginEnd="20dp">
 
             <ImageView
                 android:id="@+id/background_1"
-                android:layout_width="150dp"
-                android:layout_height="200dp"
-                app:srcCompat="@drawable/color_space"/>
+                android:layout_width="130dp"
+                android:layout_height="170dp"
+                app:srcCompat="@drawable/background_1"/>
 
             <Button
-                android:id="@+id/color_space_background"
+                android:id="@+id/background_button_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
                 android:text="@string/apply_button" />
         </LinearLayout>
 
@@ -72,20 +59,77 @@
             android:orientation="vertical"
             android:background="@drawable/settings_box"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="5dp">
 
             <ImageView
                 android:id="@+id/background_2"
-                android:layout_width="147dp"
-                android:layout_height="200dp"
-                app:srcCompat="@drawable/space" />
+                android:layout_width="125dp"
+                android:layout_height="170dp"
+                app:srcCompat="@drawable/background_2" />
 
             <Button
-                android:id="@+id/regular_space_background"
+                android:id="@+id/background_button_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:text="@string/apply_button" />
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/box2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toTopOf="@id/toplist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/box">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/settings_box"
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp"
+            android:layout_marginEnd="20dp">
+
+            <ImageView
+                android:id="@+id/background_3"
+                android:layout_width="125dp"
+                android:layout_height="170dp"
+                app:srcCompat="@drawable/background_3"/>
+
+            <Button
+                android:id="@+id/background_button_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:text="@string/apply_button" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/settings_box"
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp">
+
+            <ImageView
+                android:id="@+id/background_4"
+                android:layout_width="125dp"
+                android:layout_height="170dp"
+                app:srcCompat="@drawable/background_4" />
+
+            <Button
+                android:id="@+id/background_button_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
                 android:text="@string/apply_button" />
         </LinearLayout>
     </LinearLayout>
@@ -95,13 +139,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/reset"
-        android:textSize="25sp"
+        android:textSize="30sp"
         android:textStyle="bold"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@id/reset_stats"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/box"/>
+        app:layout_constraintTop_toBottomOf="@id/box2"/>
 
     <Button
         android:id="@+id/reset_stats"
@@ -111,10 +155,9 @@
         android:textSize="20sp"
         android:textStyle="bold"
         app:cornerRadius="15dp"
-        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/box"/>
+        app:layout_constraintTop_toBottomOf="@id/toplist"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

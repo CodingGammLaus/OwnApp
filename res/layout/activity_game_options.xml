@@ -4,22 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/space"
+    android:background="@drawable/background_2"
     android:id="@+id/main">
-
-    <TextView
-        android:id="@+id/menu_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/game_option"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@id/menu_buttons"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.9" />
 
     <LinearLayout
         android:id="@+id/menu_buttons"
@@ -32,7 +18,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/menu_title">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:layout_width="wrap_content"
@@ -70,6 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/lives_3"
+                    android:checked="true"
                     android:layout_marginStart="80dp"
                     android:layout_marginEnd="80dp"
                     android:gravity="center_horizontal|bottom"
@@ -121,6 +108,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/points_5"
+                    android:checked="true"
                     android:layout_marginStart="80dp"
                     android:layout_marginEnd="80dp"
                     android:gravity="center_horizontal|bottom"
@@ -164,6 +152,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/speed_slow"
+                    android:checked="true"
                     android:gravity="center_horizontal|bottom"
                     android:button="@null"
                     android:drawableBottom="?android:attr/listChoiceIndicatorSingle"/>

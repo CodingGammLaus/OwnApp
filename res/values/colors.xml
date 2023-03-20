@@ -14,4 +14,6 @@
     <color name="green">#44AF69</color>
     <color name="light_green">#21D19F</color>
 
+    <color name="active">#FF2020</color>
+
 </resources>
