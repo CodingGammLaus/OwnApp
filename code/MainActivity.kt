@@ -8,33 +8,49 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import se.umu.cs.dv21sln.ownapplication.databinding.ActivityMainBinding
 
-
+/**
+ * This class represent the main screen of the application. The screen contains of 4 options, play,
+ * top list, game options and settings.
+ *
+ * - Play starts the game for the player.
+ * - Top list shows the top 5 player with their score.
+ * - Game options let the player change the amount of lives, the counting of the points and the space
+ * ship speed.
+ * - Settings let the player change background and reset the top list.
+ *
+ * Copyright 2023 Simon Lindgren (dv21sln@cs.umu.se).
+ * Usage requires the author's permission.
+ *
+ * @author Simon Lindgren
+ * @since  2023-03-21
+ *
+ */
 class MainActivity : AppCompatActivity() {
 
+    /*View binding*/
     private lateinit var binding: ActivityMainBinding
 
+    /*Represent the highest score*/
     private var highScore = 0
 
     /**
-     *
+     * The on create function (Android)
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        /*Get the view binding*/
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        play()
-
-        stats()
-
-        gameOptions()
-
         setHighScore()
+        playButton()
+        topListButton()
+        gameOptionsButton()
     }
 
     /**
-     * Set the High score text.
+     * Set the high score text.
      */
     private fun setHighScore() {
 
@@ -45,9 +61,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Play init
+     * Play button init.
      */
-    private fun play() {
+    private fun playButton() {
 
         binding.playButton.setOnClickListener() {
 
@@ -57,9 +73,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Stats init
+     * Top list button init.
      */
-    private fun stats() {
+    private fun topListButton() {
 
         binding.statsButton.setOnClickListener() {
 
@@ -69,9 +85,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Game options init
+     * Game options button init.
      */
-    private fun gameOptions() {
+    private fun gameOptionsButton() {
 
         binding.settingsButton.setOnClickListener() {
 
@@ -81,7 +97,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     *
+     * Open and uses the created menu bar from res/menu.
      */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
@@ -89,7 +105,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     *
+     * Set actions to the setting icon in the menu bar.
      */
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.settings -> {
@@ -104,7 +120,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     *
+     * Load in the correct background image.
      */
     override fun onResume() {
         super.onResume()
@@ -114,7 +130,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     *
+     * Asks if the player wants to exit the application when uses the phones back navigation in the
+     * main screen.
      */
     override fun onBackPressed() {
 

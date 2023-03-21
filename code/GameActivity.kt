@@ -8,6 +8,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -15,161 +16,217 @@ import androidx.core.view.isVisible
 import se.umu.cs.dv21sln.ownapplication.databinding.ActivityGameBinding
 import java.util.*
 
+/**
+ * This class represent the game screen of the application.
+ *
+ * How to play: The player starts the game by tapping anywhere on the screen.
+ * Control the space ship by tilting the phone to the left or right.
+ * Shoot missiles by tapping anywhere on the screen (except the pause button).
+ *
+ * Info: Earn points by shooting at the meteors, and try to stay at the top of the top list.
+ * Pause/exit the game by clicking on the pause-icon in the top right corner.
+ *
+ * Copyright 2023 Simon Lindgren (dv21sln@cs.umu.se).
+ * Usage requires the author's permission.
+ *
+ * @author Simon Lindgren
+ * @since  2023-03-21
+ *
+ */
 class GameActivity: AppCompatActivity(), SensorEventListener {
 
+    /*View binding*/
     private lateinit var binding: ActivityGameBinding
 
+    /*Sensor*/
     private var sensorManager: SensorManager? = null
-    private var gyroSensor: Sensor? = null
+    private var accSensor: Sensor? = null
 
-    private var screenWidth = 0
-    private var screenHeight = 0
-
-    private val randMeteor = Random()
-
+    /*The meteor spawn timer*/
     private var meteorTimer = Timer()
     private var gameTimer = Timer()
 
-    //private val game = Game(this)
-
+    /*The objects (space ship, missile and meteor)*/
     private var missile = Rect()
     private var meteor = Rect()
     private var ship = Rect()
 
-    /*Game options*/
-    private var startHealth = 4
-    private var score = 0
-    private var points = 5
-    private var health = 3
-    private var damage = 1
-    private var shipSpeed = 2
+    /*The game handler*/
+    private var game = GameModel()
 
+    /*Random generator*/
+    private val randMeteor = Random()
+
+    /*Boolean to check if the game is paused*/
     private var paused = false
 
 
     /**
-     *
+     * The on create function (Android)
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        /*Get the view binding*/
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setUpActivity()
+
+        /*Checks if there exist a saved state*/
+        if(savedInstanceState != null) {
+            intiSavedState(savedInstanceState)
+        }
+
+        else {
+            val pref = getSharedPreferences("settings", MODE_PRIVATE)
+            game.setStartValues(pref)
+        }
+
+        /*Set up the game*/
+        setDisplaySize()
+        loadInLives()
+
+        /*Hide the pause button until the game starts*/
+        binding.pauseButton.isVisible = false
+
+        startGame()
+    }
+
+    /**
+     * Set up the activity
+     */
+    private fun setUpActivity() {
+
+        /*Hide the app bar*/
         supportActionBar?.hide()
 
+        /*Load in the correct background image*/
         val sharedPref = getSharedPreferences("background", MODE_PRIVATE)
         binding.gameLayout.setBackgroundResource(sharedPref.getInt("pic", R.drawable.background_2))
 
-        setDisplaySizeToGame()
-        getStartValues()
-        loadInLife()
-
-        binding.pauseButton.isVisible = false
-
+        /*Set up the accelerometer sensor*/
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-        gyroSensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        accSensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+    }
 
-        binding.gameLayout.setOnClickListener() {
+    /**
+     * Init app with saved state values.
+     * @param savedInstanceState The saved state.
+     */
+    private fun intiSavedState(savedInstanceState: Bundle) {
 
-            binding.pauseButton.isVisible = true
-            binding.arrow1.setImageResource(0)
-            binding.arrow2.setImageResource(0)
-            binding.tap.text = ""
-            binding.menuTitle.text = ""
+        super.onRestoreInstanceState(savedInstanceState)
 
-            shoot()
+        game.lives = savedInstanceState.getInt("lives")
+        game.totalScore = savedInstanceState.getInt("score")
+        game.points = savedInstanceState.getInt("points")
+        game.shipSpeed = savedInstanceState.getInt("speed")
 
-            meteor()
+        binding.score.text = "Score: " + game.totalScore
+        binding.tap.text = "Tap to resume!"
+        binding.menuTitle.text = "Paused"
+        binding.arrow1.setImageResource(0)
+        binding.arrow2.setImageResource(0)
 
-            pauseButton()
-
-            gameHandler()
-        }
+        paused = true
+        onStop()
     }
 
     /**
      * Sets the display size to the game.
      */
-    private fun setDisplaySizeToGame() {
+    private fun setDisplaySize() {
 
         //(ÄNDRA SÅ INTE 280 ÄR KVAR!!!!!!!!)
-        screenWidth = resources.displayMetrics.widthPixels - 280
-        screenHeight = resources.displayMetrics.heightPixels
+        game.screenWidth = resources.displayMetrics.widthPixels - 280
+        game.screenHeight = resources.displayMetrics.heightPixels
     }
 
     /**
-     *
+     * Check the amount of lives and load in the life bar.
      */
-    private fun getStartValues() {
+    private fun loadInLives() {
 
-        val sharedPref = getSharedPreferences("settings", MODE_PRIVATE)
-        startHealth = sharedPref.getInt("health", 3)
-        points = sharedPref.getInt("points", 5)
-        shipSpeed = sharedPref.getInt("speed", 2)
-
-        health = startHealth
-    }
-
-    /**
-     *
-     */
-    override fun onStart() {
-        super.onStart()
-        sensorManager?.registerListener(this, gyroSensor, SensorManager.SENSOR_DELAY_GAME)
-    }
-
-    /**
-     *
-     */
-    override fun onStop() {
-        super.onStop()
-        sensorManager?.unregisterListener(this, gyroSensor)
-    }
-
-    /**
-     *
-     */
-    override fun onSensorChanged(sensor: SensorEvent?) {
-
-        val x: Float = sensor!!.values[0]
-
-        //Turing Left
-        if(x > 0.5 && binding.spaceShip.x >= 0) {
-
-            binding.spaceShip.x -= (x * shipSpeed)
+        if(game.lives == 4) {
+            binding.lives5.setImageResource(0)
         }
 
-        //Turning Right
-        else if(x < -0.5 && binding.spaceShip.x < screenWidth) {
-
-            binding.spaceShip.x -= (x * shipSpeed)
+        else if(game.lives == 3) {
+            binding.lives5.setImageResource(0)
+            binding.lives4.setImageResource(0)
         }
 
-        //Standing still
-        else if(x >= (-0.5) && x <= (0.5)) {
+        else if(game.lives == 2) {
+            binding.lives5.setImageResource(0)
+            binding.lives4.setImageResource(0)
+            binding.lives3.setImageResource(0)
+        }
 
+        else if(game.lives == 1) {
+            binding.lives5.setImageResource(0)
+            binding.lives4.setImageResource(0)
+            binding.lives3.setImageResource(0)
+            binding.lives2.setImageResource(0)
         }
     }
 
     /**
-     *
+     * Starting the game when the player tapping the screen.
      */
-    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
-        // TODO Auto-generated method stub
+    private fun startGame() {
+
+        /*Tapping anywhere on the screen*/
+        binding.gameLayout.setOnClickListener() {
+
+            removeGameInfo()
+            pauseButton()
+            shootInit()
+            meteor()
+            gameHandler()
+            onStart()
+            paused = false
+        }
     }
 
     /**
-     * Shoot function init.
+     * Removes the game info from the screen.
      */
-    private fun shoot() {
+    private fun removeGameInfo() {
+
+        binding.pauseButton.isVisible = true
+        binding.arrow1.setImageResource(0)
+        binding.arrow2.setImageResource(0)
+        binding.tap.text = ""
+        binding.menuTitle.text = ""
+    }
+
+    /**
+     * Pause button init.
+     */
+    private fun pauseButton() {
+
+        binding.pauseButton.setOnClickListener() {
+
+            paused = true
+            onStop()
+            askExit()
+        }
+    }
+
+    /**
+     * Shoot function init, tap anywhere on the screen to shoot (except the pause button).
+     */
+    private fun shootInit() {
 
         binding.gameLayout.setOnClickListener() {
 
+            /*Respawn missile at the space ship position*/
             binding.missile.setImageResource(R.drawable.missile)
-
             binding.missile.x = binding.spaceShip.x + 75
             binding.missile.y = binding.spaceShip.y
 
+            /*Animate the missile movement*/
             ObjectAnimator.ofFloat(binding.missile, "translationY", -2000f).apply {
                 duration = 300
                 start()
@@ -178,7 +235,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     }
 
     /**
-     * Spawn meteors.
+     * Respawn meteor and make it fall every 3 seconds.
      */
     private fun meteor() {
 
@@ -193,11 +250,13 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
                     /*Runs on the UI thread*/
                     runOnUiThread {
-                        binding.metior.setImageResource(R.drawable.metior)
 
-                        binding.metior.x = randMeteor.nextFloat() * (screenWidth)
+                        /*Respawn meteor at the top of the screen*/
+                        binding.metior.setImageResource(R.drawable.metior)
+                        binding.metior.x = randMeteor.nextFloat() * (game.screenWidth)
                         binding.metior.y = -200f
 
+                        /*Animate the meteors movement*/
                         ObjectAnimator.ofFloat(binding.metior, "translationY", 2000f).apply {
                             duration = 2000
                             start()
@@ -209,7 +268,9 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     }
 
     /**
-     *
+     * Handles the collisions between ship and meteor, and between meteor and missile.
+     * Calls the dead function when player is out of lives.
+     * Removes the missile and meteor if they gets out of bounds.
      */
     private fun gameHandler() {
 
@@ -226,46 +287,39 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
                         binding.metior.getHitRect(meteor)
                         binding.spaceShip.getHitRect(ship)
 
-                        //Player dead
-                        if(health <= 0) {
+                        /*Player dead*/
+                        if(game.lives <= 0) {
 
-                            cancel()
-                            onStop()
-                            gameTimer.cancel()
-                            meteorTimer.cancel()
-                            checkIfOnTopList()
+                            dead()
                         }
 
-                        //Meteor hits ship
+                        /*Meteor hits ship*/
                         if(Rect.intersects(ship, meteor)) {
 
-                            health -= damage
-
+                            game.takeDamage()
                             removeLife()
-
-                            deleteMeteor()
+                            removeMeteor()
                         }
 
-                        //Rocket hits meteor
+                        /*Missile hits meteor*/
                         else if(Rect.intersects(missile, meteor)) {
 
-                            score += points
-                            binding.score.text = "Score: " + score
-
-                            deleteMeteor()
-                            deleteMissile()
+                            game.addScore()
+                            removeMeteor()
+                            removeMissile()
+                            binding.score.text = "Score: " + game.totalScore
                         }
 
-                        //Rocket disappear
+                        /*Removes missile*/
                         else if(binding.missile.y < 0) {
 
-                            deleteMissile()
+                            removeMissile()
                         }
 
-                        //Meteor disappear
-                        else if(binding.metior.y > screenHeight) {
+                        /*Remove meteor*/
+                        else if(binding.metior.y > game.screenHeight) {
 
-                            deleteMeteor()
+                            removeMeteor()
                         }
                     }
                 }
@@ -274,51 +328,33 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     }
 
     /**
-     * Load in life bar.
-     */
-    private fun loadInLife() {
-
-        if (health == 3) {
-            binding.life5.setImageResource(0)
-            binding.life4.setImageResource(0)
-        }
-
-        else if(health == 1) {
-            binding.life5.setImageResource(0)
-            binding.life4.setImageResource(0)
-            binding.life3.setImageResource(0)
-            binding.life2.setImageResource(0)
-        }
-    }
-
-    /**
      * Remove life from life bar.
      */
     private fun removeLife() {
 
-        when (health) {
+        when (game.lives) {
             4 -> {
-                binding.life5.setImageResource(R.drawable.favorite_border_24)
+                binding.lives5.setImageResource(0)
             }
             3 -> {
-                binding.life4.setImageResource(R.drawable.favorite_border_24)
+                binding.lives4.setImageResource(0)
             }
             2 -> {
-                binding.life3.setImageResource(R.drawable.favorite_border_24)
+                binding.lives3.setImageResource(0)
             }
             1 -> {
-                binding.life2.setImageResource(R.drawable.favorite_border_24)
+                binding.lives2.setImageResource(0)
             }
             0 -> {
-                binding.life1.setImageResource(R.drawable.favorite_border_24)
+                binding.lives1.setImageResource(0)
             }
         }
     }
 
     /**
-     * Delete Meteor
+     * Remove meteor
      */
-    private fun deleteMeteor() {
+    private fun removeMeteor() {
 
         binding.metior.setImageDrawable(null)
         binding.metior.setImageResource(0)
@@ -328,9 +364,9 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     }
 
     /**
-     * Delete missile.
+     * Remove missile.
      */
-    private fun deleteMissile() {
+    private fun removeMissile() {
 
         binding.missile.setImageDrawable(null)
         binding.missile.setImageResource(0)
@@ -340,148 +376,56 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     }
 
     /**
-     * Pause button init.
+     * When player die.
      */
-    private fun pauseButton() {
+    private fun dead() {
 
-        binding.pauseButton.setOnClickListener() {
-
-            pause()
-        }
-    }
-
-    /**
-     * Pause the game when back button is pressed.
-     */
-    override fun onBackPressed() {
-        pause()
-    }
-
-    /**
-     * Pause game, and ask if player want to quit or keep playing.
-     */
-    private fun pause() {
-
+        /*Unregister the sensor listener*/
         onStop()
-        paused = true
 
-        val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
+        /*Cancel timers*/
+        gameTimer.cancel()
+        meteorTimer.cancel()
 
-        builder.setTitle("Quit")
-        builder.setMessage("Do you want to quit current game?")
+        val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
 
-        builder.setPositiveButton("YES") {_, _ ->
-
-            backToMenu()
+        /*Check if player did it to the top list*/
+        if(game.checkIfOnTopList(sharedPref)) {
+            onTopList()
+            return
         }
 
-        builder.setNegativeButton("NO") {_, _ ->
+        notOnTopList()
+    }
+
+    /*------------------------------------Alert dialogs-------------------------------------------*/
+
+    /**
+     * Ask if player want to quit or keep playing.
+     */
+    private fun askExit() {
+
+        val alert = AlertDialog.Builder(this, R.style.MyDialogTheme)
+
+        alert.setTitle("Quit")
+        alert.setMessage("Do you want to quit current game?")
+
+        alert.setPositiveButton("YES") { _, _ ->
+
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        alert.setNegativeButton("NO") { _, _ ->
 
             closeContextMenu()
             onStart()
             paused = false
         }
 
-        builder.create()
-        builder.show()
-    }
-
-    /**
-     *
-     */
-    private fun addScoreToScoreList(name: String) {
-
-        val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
-
-        val arr = arrayOf<Int>(
-            sharedPref.getInt("score1", 0),
-            sharedPref.getInt("score2", 0),
-            sharedPref.getInt("score3", 0),
-            sharedPref.getInt("score4", 0),
-            sharedPref.getInt("score5", 0),
-            0
-        )
-
-        arr[5] = score
-        arr.sortDescending()
-
-        val editor = sharedPref.edit()
-        editor.putInt("score1", arr[0])
-        editor.putInt("score2", arr[1])
-        editor.putInt("score3", arr[2])
-        editor.putInt("score4", arr[3])
-        editor.putInt("score5", arr[4])
-
-        /*Set name to Unknown if player leave name field empty*/
-        var newName = name
-        if(newName == "") {
-            newName = "Unknown"
-        }
-
-        if(score == arr[0]) {
-
-            editor.putString("name5", sharedPref.getString("name4", "-"))
-            editor.putString("name4", sharedPref.getString("name3", "-"))
-            editor.putString("name3", sharedPref.getString("name2", "-"))
-            editor.putString("name2", sharedPref.getString("name1", "-"))
-            editor.putString("name1", newName)
-        }
-
-        else if(score == arr[1]) {
-
-            editor.putString("name5", sharedPref.getString("name4", "-"))
-            editor.putString("name4", sharedPref.getString("name3", "-"))
-            editor.putString("name3", sharedPref.getString("name2", "-"))
-            editor.putString("name2", newName)
-        }
-
-        else if(score == arr[2]) {
-
-            editor.putString("name5", sharedPref.getString("name4", "-"))
-            editor.putString("name4", sharedPref.getString("name3", "-"))
-            editor.putString("name3", newName)
-        }
-
-        else if(score == arr[3]) {
-
-            editor.putString("name5", sharedPref.getString("name4", "-"))
-            editor.putString("name4", newName)
-
-        }
-
-        else if(score == arr[4]) {
-
-            editor.putString("name5", newName)
-        }
-
-        editor.apply()
-    }
-
-    /**
-     * Checks if player did make it to the top list.
-     */
-    private fun checkIfOnTopList() {
-
-        val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
-
-        val arr = arrayOf<Int>(
-            sharedPref.getInt("score1", 0),
-            sharedPref.getInt("score2", 0),
-            sharedPref.getInt("score3", 0),
-            sharedPref.getInt("score4", 0),
-            sharedPref.getInt("score5", 0)
-        )
-
-        for(i in 0..4) {
-
-            if(score >= arr[i] && score > 0) {
-
-                onTopList()
-                return
-            }
-        }
-
-        notOnTopList()
+        alert.create()
+        alert.show()
     }
 
     /**
@@ -502,7 +446,9 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
         alert.setNegativeButton("No") {_, _ ->
 
-            backToMenu()
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }.create()
 
         alert.show()
@@ -513,17 +459,19 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
      */
     private fun onTopList() {
 
+        val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
+
         val input = EditText(this)
 
         val alert = AlertDialog.Builder(this, R.style.MyDialogTheme)
 
-        alert.setTitle("Enter Name")
+        alert.setTitle("Made it to the top list")
         alert.setView(input)
-        alert.setMessage("Enter your name for the top list")
+        alert.setMessage("You got " + game.totalScore + " points\nEnter your name for the top list")
         alert.setPositiveButton("Play Again") { dialog, _ ->
 
             dialog.cancel()
-            addScoreToScoreList(input.text.toString())
+            game.addScoreToScoreList(input.text.toString(), sharedPref)
 
             val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
@@ -532,20 +480,77 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
         alert.setNegativeButton("Exit") {_, _ ->
 
-            addScoreToScoreList(input.text.toString())
-            backToMenu()
+            game.addScoreToScoreList(input.text.toString(), sharedPref)
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }.create()
 
         alert.show()
     }
 
-    /**
-     * Back to menu with correct values.
-     */
-    private fun backToMenu() {
+    /*------------------------------------Override functions--------------------------------------*/
 
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+    /**
+     * Moving the space ship when the phone is tilting.
+     */
+    override fun onSensorChanged(sensor: SensorEvent?) {
+
+        val x: Float = sensor!!.values[0]
+
+        /*Turing Left*/
+        if(x > 0.5 && binding.spaceShip.x >= 0) {
+
+            binding.spaceShip.x -= (x * game.shipSpeed)
+        }
+
+        /*Turning Right*/
+        else if(x < -0.5 && binding.spaceShip.x < game.screenWidth) {
+
+            binding.spaceShip.x -= (x * game.shipSpeed)
+        }
+    }
+
+    /**
+     * Auto function.
+     */
+    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+        // TODO Auto-generated method stub
+    }
+
+    /**
+     * Register the sensor listener, on the android start function.
+     */
+    override fun onStart() {
+        super.onStart()
+        sensorManager?.registerListener(this, accSensor, SensorManager.SENSOR_DELAY_GAME)
+    }
+
+    /**
+     * Unregister the sensor listener, on the android stop function.
+     */
+    override fun onStop() {
+        super.onStop()
+        sensorManager?.unregisterListener(this, accSensor)
+    }
+
+    /**
+     * Pause the game when phones back button is pressed.
+     */
+    override fun onBackPressed() {
+        askExit()
+    }
+
+    /**
+     * Save current state if app crashes.
+     * @param outState Where to be save.
+     */
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt("lives", game.lives)
+        outState.putInt("score", game.totalScore)
+        outState.putInt("speed", game.shipSpeed)
+        outState.putInt("points", game.points)
     }
 }
