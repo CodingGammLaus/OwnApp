@@ -51,31 +51,31 @@
             android:textSize="25sp" />
 
         <ImageView
-            android:id="@+id/life_1"
+            android:id="@+id/lives_1"
             android:layout_width="30dp"
             android:layout_height="30dp"
             app:srcCompat="@drawable/favorite_24"/>
 
         <ImageView
-            android:id="@+id/life_2"
+            android:id="@+id/lives_2"
             android:layout_width="30dp"
             android:layout_height="30dp"
             app:srcCompat="@drawable/favorite_24"/>
 
         <ImageView
-            android:id="@+id/life_3"
+            android:id="@+id/lives_3"
             android:layout_width="30dp"
             android:layout_height="30dp"
             app:srcCompat="@drawable/favorite_24"/>
 
         <ImageView
-            android:id="@+id/life_4"
+            android:id="@+id/lives_4"
             android:layout_width="30dp"
             android:layout_height="30dp"
             app:srcCompat="@drawable/favorite_24"/>
 
         <ImageView
-            android:id="@+id/life_5"
+            android:id="@+id/lives_5"
             android:layout_width="30dp"
             android:layout_height="30dp"
             app:srcCompat="@drawable/favorite_24"/>
