@@ -179,13 +179,13 @@
 
         <Button
             android:id="@+id/settings_button"
-            android:layout_width="180dp"
-            android:layout_height="70dp"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
             android:text="@string/apply_button"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:cornerRadius="15dp"
-            android:layout_marginTop="20dp" />
+            app:backgroundTint="@null"
+            android:background="@drawable/buttons"/>
 
     </LinearLayout>
 

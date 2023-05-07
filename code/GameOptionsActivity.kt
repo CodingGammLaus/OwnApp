@@ -17,7 +17,7 @@ import se.umu.cs.dv21sln.ownapplication.databinding.ActivityGameOptionsBinding
  * Usage requires the author's permission.
  *
  * @author Simon Lindgren
- * @since  2023-03-21
+ * @since  2023-05-07
  *
  */
 class GameOptionsActivity: AppCompatActivity() {

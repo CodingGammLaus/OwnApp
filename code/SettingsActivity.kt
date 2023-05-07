@@ -6,16 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import se.umu.cs.dv21sln.ownapplication.databinding.ActivitySettingsBinding
 
 /**
- * This class represent the settings screen of the application. The options are change background
- * and reset the top list. The player can choose between four different backgrounds, and when a
- * background is applied it will change for every activity. When the player click on reset the top
- * list button, a dialog will ask if they want to reset the top list.
+ * This class represent the settings screen of the application. The player can choose between
+ * four different backgrounds, and when a background is applied it will change for every activity.
  *
  * Copyright 2023 Simon Lindgren (dv21sln@cs.umu.se).
  * Usage requires the author's permission.
  *
  * @author Simon Lindgren
- * @since  2023-03-21
+ * @since  2023-05-07
  *
  */
 class SettingsActivity : AppCompatActivity() {
@@ -34,7 +32,6 @@ class SettingsActivity : AppCompatActivity() {
 
         setUpActivity()
         applyButtons()
-        resetButton()
     }
 
     /**
@@ -97,60 +94,6 @@ class SettingsActivity : AppCompatActivity() {
         binding.main.setBackgroundResource(image)
 
         editor.putInt("pic", image)
-        editor.apply()
-    }
-
-    /**
-     * Reset button init.
-     */
-    private fun resetButton() {
-
-        binding.resetStats.setOnClickListener() {
-
-            /*Dialog asks if the player want to reset the top list*/
-            val alert = AlertDialog.Builder(this, R.style.MyDialogTheme)
-
-            alert.setTitle("Reset score")
-            alert.setMessage("Do you want to reset the top list?")
-
-            alert.setPositiveButton("YES") { _, _ ->
-
-                resetTopList()
-            }
-
-            alert.setNegativeButton("NO") { _, _ ->
-
-                closeContextMenu()
-            }
-
-            alert.create()
-            alert.show()
-        }
-    }
-
-    /**
-     * Resets the top list.
-     */
-    private fun resetTopList() {
-
-        /*Load in the top list*/
-        val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
-        val editor = sharedPref.edit()
-
-        /*Set names to '-'*/
-        editor.putString("name1", "-")
-        editor.putString("name2", "-")
-        editor.putString("name3", "-")
-        editor.putString("name4", "-")
-        editor.putString("name5", "-")
-
-        /*Set scores to 0*/
-        editor.putInt("score1", 0)
-        editor.putInt("score2", 0)
-        editor.putInt("score3", 0)
-        editor.putInt("score4", 0)
-        editor.putInt("score5", 0)
-
         editor.apply()
     }
 }

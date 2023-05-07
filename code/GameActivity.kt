@@ -7,8 +7,8 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +30,7 @@ import java.util.*
  * Usage requires the author's permission.
  *
  * @author Simon Lindgren
- * @since  2023-03-21
+ * @since  2023-05-07
  *
  */
 class GameActivity: AppCompatActivity(), SensorEventListener {
@@ -58,7 +58,10 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     private val randMeteor = Random()
 
     /*Boolean to check if the game is paused*/
-    private var paused = false
+    private var isPaused = true
+
+    private lateinit var shot: MediaPlayer
+    private lateinit var win: MediaPlayer
 
 
     /**
@@ -108,6 +111,10 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         /*Set up the accelerometer sensor*/
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         accSensor = sensorManager!!.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
+        /*Init the soundeffects*/
+        shot = MediaPlayer.create(this, R.raw.shot)
+        win = MediaPlayer.create(this, R.raw.win)
     }
 
     /**
@@ -129,7 +136,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         binding.arrow1.setImageResource(0)
         binding.arrow2.setImageResource(0)
 
-        paused = true
+        isPaused = true
         onStop()
     }
 
@@ -138,7 +145,6 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
      */
     private fun setDisplaySize() {
 
-        //(ÄNDRA SÅ INTE 280 ÄR KVAR!!!!!!!!)
         game.screenWidth = resources.displayMetrics.widthPixels - 280
         game.screenHeight = resources.displayMetrics.heightPixels
     }
@@ -185,7 +191,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
             meteor()
             gameHandler()
             onStart()
-            paused = false
+            isPaused = false
         }
     }
 
@@ -208,7 +214,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
         binding.pauseButton.setOnClickListener() {
 
-            paused = true
+            isPaused = true
             onStop()
             askExit()
         }
@@ -221,7 +227,10 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
         binding.gameLayout.setOnClickListener() {
 
+            shot.start()
+
             /*Respawn missile at the space ship position*/
+            binding.missile.isEnabled = true
             binding.missile.setImageResource(R.drawable.missile)
             binding.missile.x = binding.spaceShip.x + 75
             binding.missile.y = binding.spaceShip.y
@@ -239,19 +248,19 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
      */
     private fun meteor() {
 
-        binding.metior.setImageDrawable(null)
-        binding.metior.setImageResource(0)
+        removeMeteor()
 
         meteorTimer.scheduleAtFixedRate(object : TimerTask() {
 
             override fun run() {
 
-                if(!paused) {
+                if(!isPaused) {
 
                     /*Runs on the UI thread*/
                     runOnUiThread {
 
                         /*Respawn meteor at the top of the screen*/
+                        binding.metior.isEnabled = true
                         binding.metior.setImageResource(R.drawable.metior)
                         binding.metior.x = randMeteor.nextFloat() * (game.screenWidth)
                         binding.metior.y = -200f
@@ -274,11 +283,13 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
      */
     private fun gameHandler() {
 
+        removeMissile()
+
         gameTimer.scheduleAtFixedRate(object : TimerTask() {
 
             override fun run() {
 
-                if(!paused) {
+               if(!isPaused) {
 
                     /*Runs on the UI thread*/
                     runOnUiThread {
@@ -294,7 +305,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
                         }
 
                         /*Meteor hits ship*/
-                        if(Rect.intersects(ship, meteor)) {
+                        if(Rect.intersects(ship, meteor) && binding.metior.isEnabled) {
 
                             game.takeDamage()
                             removeLife()
@@ -302,7 +313,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
                         }
 
                         /*Missile hits meteor*/
-                        else if(Rect.intersects(missile, meteor)) {
+                        else if(Rect.intersects(missile, meteor) && binding.metior.isEnabled && binding.missile.isEnabled) {
 
                             game.addScore()
                             removeMeteor()
@@ -352,15 +363,12 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     }
 
     /**
-     * Remove meteor
+     * Remove meteor.
      */
     private fun removeMeteor() {
 
         binding.metior.setImageDrawable(null)
-        binding.metior.setImageResource(0)
-
-        binding.metior.x = -10000f
-        binding.metior.y = -10000f
+        binding.metior.isEnabled = false
     }
 
     /**
@@ -369,10 +377,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
     private fun removeMissile() {
 
         binding.missile.setImageDrawable(null)
-        binding.missile.setImageResource(0)
-
-        binding.missile.x = 10000f
-        binding.missile.y = 10000f
+        binding.missile.isEnabled = false
     }
 
     /**
@@ -405,6 +410,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
      */
     private fun askExit() {
 
+        isPaused = true
         val alert = AlertDialog.Builder(this, R.style.MyDialogTheme)
 
         alert.setTitle("Quit")
@@ -421,7 +427,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
             closeContextMenu()
             onStart()
-            paused = false
+            isPaused = false
         }
 
         alert.create()
@@ -459,6 +465,8 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
      */
     private fun onTopList() {
 
+        win.start()
+
         val sharedPref = getSharedPreferences("scoreList", MODE_PRIVATE)
 
         val input = EditText(this)
@@ -470,6 +478,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
         alert.setMessage("You got " + game.totalScore + " points\nEnter your name for the top list")
         alert.setPositiveButton("Play Again") { dialog, _ ->
 
+            win.stop()
             dialog.cancel()
             game.addScoreToScoreList(input.text.toString(), sharedPref)
 
@@ -480,6 +489,7 @@ class GameActivity: AppCompatActivity(), SensorEventListener {
 
         alert.setNegativeButton("Exit") {_, _ ->
 
+            win.stop()
             game.addScoreToScoreList(input.text.toString(), sharedPref)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

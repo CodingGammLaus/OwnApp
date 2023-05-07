@@ -13,4 +13,12 @@
     <color name="dark_grey">#2D2A32</color>
     <color name="green">#44AF69</color>
     <color name="light_green">#21D19F</color>
+    <color name="red">#EB3A40</color>
+
+    <color name="orange">#F69856</color>
+
+    <color name="prim">#FD8259</color>
+
+    <color name="shadow">#E1541F</color>
+
 </resources>

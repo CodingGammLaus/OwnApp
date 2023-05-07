@@ -30,7 +30,7 @@
 
     <!--Settings-->
     <string name="background">Set background</string>
-    <string name="reset_button">RESET</string>
+    <string name="reset_button">RESET TOP LIST</string>
     <string name="reset">Reset top list</string>
 
     <!--Top List-->

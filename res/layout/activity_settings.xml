@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/background"
-        android:textSize="30sp"
+        android:textSize="25sp"
         android:textStyle="bold"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@id/box"
@@ -35,12 +35,12 @@
             android:orientation="vertical"
             android:background="@drawable/settings_box"
             android:paddingTop="10dp"
-            android:paddingBottom="5dp"
+            android:paddingBottom="10dp"
             android:layout_marginEnd="20dp">
 
             <ImageView
                 android:id="@+id/background_1"
-                android:layout_width="130dp"
+                android:layout_width="125dp"
                 android:layout_height="170dp"
                 app:srcCompat="@drawable/background_1"/>
 
@@ -50,6 +50,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="20dp"
+                app:backgroundTint="@null"
+                android:background="@drawable/buttons"
                 android:text="@string/apply_button" />
         </LinearLayout>
 
@@ -59,7 +61,7 @@
             android:orientation="vertical"
             android:background="@drawable/settings_box"
             android:paddingTop="10dp"
-            android:paddingBottom="5dp">
+            android:paddingBottom="10dp">
 
             <ImageView
                 android:id="@+id/background_2"
@@ -73,6 +75,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="20dp"
+                app:backgroundTint="@null"
+                android:background="@drawable/buttons"
                 android:text="@string/apply_button" />
         </LinearLayout>
     </LinearLayout>
@@ -80,8 +84,8 @@
         android:id="@+id/box2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toTopOf="@id/toplist"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/box">
@@ -92,7 +96,7 @@
             android:orientation="vertical"
             android:background="@drawable/settings_box"
             android:paddingTop="10dp"
-            android:paddingBottom="5dp"
+            android:paddingBottom="10dp"
             android:layout_marginEnd="20dp">
 
             <ImageView
@@ -107,6 +111,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="20dp"
+                app:backgroundTint="@null"
+                android:background="@drawable/buttons"
                 android:text="@string/apply_button" />
         </LinearLayout>
 
@@ -116,7 +122,7 @@
             android:orientation="vertical"
             android:background="@drawable/settings_box"
             android:paddingTop="10dp"
-            android:paddingBottom="5dp">
+            android:paddingBottom="10dp">
 
             <ImageView
                 android:id="@+id/background_4"
@@ -130,34 +136,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="20dp"
+                app:backgroundTint="@null"
+                android:background="@drawable/buttons"
                 android:text="@string/apply_button" />
         </LinearLayout>
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/toplist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/reset"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/reset_stats"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/box2"/>
-
-    <Button
-        android:id="@+id/reset_stats"
-        android:layout_width="180dp"
-        android:layout_height="70dp"
-        android:text="@string/reset_button"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:cornerRadius="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toplist"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

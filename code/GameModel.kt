@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
  * Usage requires the author's permission.
  *
  * @author Simon Lindgren
- * @since  2023-03-21
+ * @since  2023-05-07
  *
  */
 class GameModel: AppCompatActivity() {
@@ -76,7 +76,7 @@ class GameModel: AppCompatActivity() {
 
         for(i in 0..4) {
 
-            if(totalScore >= arr[i] && totalScore > 0) {
+            if(totalScore > arr[i] && totalScore > 0) {
 
                 return true
             }
